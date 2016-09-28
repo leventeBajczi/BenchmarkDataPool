@@ -1,0 +1,17 @@
+kind,name,id,time,team
+Start,Tokenize,Pride1,10000,Analytics_team
+Start,Tokenize,Sense1,20000,Analytics_team
+End,Tokenize,Pride1,30000,Analytics_team
+End,Tokenize,Sense1,40000,Analytics_team
+Start,Collect,Pride1,50000,Analytics_team
+Start,Collect,Sense1,60000,Analytics_team
+End,Collect,Pride1,70000,Analytics_team
+End,Collect,Sense1,80000,Analytics_team
+Start,ComputeScalar,Pride1,90000,Analytics_team
+Start,ComputeScalar,Sense1,100000,Analytics_team
+End,ComputeScalar,Pride1,110000,Analytics_team
+End,ComputeScalar,Sense1,120000,Analytics_team
+Start,ComputeScalar,Sense1_Pride1,130000,Analytics_team
+End,ComputeScalar,Sense1_Pride1,140000,Analytics_team
+Start,ComputeCosine,Sense1_Pride1,150000,Analytics_team
+End,ComputeCosine,Sense1_Pride1,160000,Analytics_team
