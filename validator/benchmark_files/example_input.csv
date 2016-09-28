@@ -14,4 +14,4 @@ End,ComputeScalar,Sense1,120000,Analytics_team
 Start,ComputeScalar,Sense1_Pride1,130000,Analytics_team
 End,ComputeScalar,Sense1_Pride1,140000,Analytics_team
 Start,ComputeCosine,Sense1_Pride1,150000,Analytics_team
-End,ComputeCosine,Sense1_Pride1,160000,Analytics_team
+End,ComputeCosine,Sense1_Pride1,,Analytics_team
