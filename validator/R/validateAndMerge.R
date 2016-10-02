@@ -10,7 +10,7 @@ csv_files <- list.files(path = path, pattern = ".csv", full.names = T)
 v <- validator(
   kind %in% c("Start", "End"),
   name %in% c("Tokenize", "Collect", "ComputeScalar", "ComputeCosine"),
-  gsub(pattern = "Pride|Sense|[1:6]|\\_", "", id) == ""
+  gsub(pattern = "Pride|Sense|[1-6]|\\_", "", id) == ""
 )
 
 files_to_merge <- list()
