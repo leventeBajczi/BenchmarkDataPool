@@ -1,0 +1,97 @@
+---
+title: "Benchmark Analysis"
+author: "TBD: team name"
+date: "3 Oct 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+load("data/large_output.RData")
+head(large_csv)
+```
+
+## A necessary evil: some basic data transformations
+
+Write a script which will transform your .csv into a data frame containing only processing times of nodes in ms and not the output of the System.System.nanoTime() call. 
+
+```{r, echo = F}
+# ## It should look something like:
+# library(reshape2)
+# processing.times <- dcast(large_csv, formula = team + name + id ~ kind, value.var = "time")
+# processing.times$processingTime <- processing.times$End - processing.times$Start
+
+```
+
+## Analysis of your own solution (3p)
+
+Analyze your own processing times first:
+
+What is the bottleneck of your solution?
+
+```{r, echo=FALSE}
+# E.g. what is the activity (name) which has the highest average processing time for a particular input (id)?
+# To answer such questions, 
+  # You can use plots
+# library(ggplot2)
+# ggplot(processing.times) + geom_histogram(aes(x = processingTime)) +
+#   facet_grid(id ~ name)
+  # Or you can use basic statistical computations
+# library(plyr)
+# medianTimes <- ddply(processing.times, .variables =  c("name", "id"), summarize,
+#       numberOfRuns = length(processingTime),
+#       medianProcessingTIme = median(processingTime))
+# medianTimes[order(medianTimes$medianProcessingTIme, decreasing = T), ]
+# Is it always the same activity for each input? If not, how does the bottleneck change along the size of the input?
+```
+
+How does the processing time of your solution scale? (Note that the size of the input texts increase exponentially.) 
+
+```{r, echo=FALSE}
+## You can "read" the answer from a chart like this:
+# library(ggplot2)
+# ggplot(processing.times) +
+#   geom_point(aes(x = id, y = processingTime)) +
+#   facet_wrap(~name, drop = T, scales = "free_x") +
+#   expand_limits(y = 0)
+
+# After that you should try to fut a regression curve. If you do not want to spend much time with it,
+# a linear model is just fine.
+
+# # You van do this e.g. with extending the data frame with the length of the inputs
+# # (which is implementation-dependent) like this:
+#  input.lengths <- data.frame(id = paste0("Pride", seq(from = 1, to = 6)),
+#                             input_length = 10^seq(from = 1, to = 6))
+#  processing.times <- merge(processing.times, input.lengths, by = "id", all.x = T)
+#  head(processing.times)
+#  
+#  fit <- lm(processingTime ~ input_length, data = processing.times)
+#  print(summary(fit))
+
+```
+
+How determined are the processing times among different rounds of running? (Note that you will run the Tokenize process e.g. on Sense1 6 times)
+
+```{r, echo=FALSE}
+# Again: either you calculate a standard deviation/range/IQR/variance/coefficient of variation, etc.
+# or: you create some good visualization which contains the information.
+```
+
+Anything else you found interesting during analysis
+```{r, echo=FALSE}
+
+```
+
+## The real benchmark analysis
+
+Read in the large .csv file containing the results of other teams and compare your times with those of other teams. (3p)
+
+```{r, echo = F}
+# You are a hard core data analyst at this point, you can start working on the main part of
+# the analysis. :)
+
+# In this exercise, feel free to start with the extended version of the computations/visualizations above,
+# however, you should raise and answer at least one interesting and unique question, independently from the
+# others. 
+```
+
