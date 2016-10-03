@@ -5,6 +5,7 @@ library(validate)
 
 path <- "benchmark_files/"
 csv_files <- list.files(path = path, pattern = ".csv", full.names = T)
+csv_files <- csv_files[!grepl(pattern = "example", x = csv_files)]
 
 ## Validation ##
 v <- validator(
