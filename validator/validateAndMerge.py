@@ -51,5 +51,5 @@ if len(dataFrames) == 0:
     exit(3)
 
 mergedDf = pandas.concat(dataFrames)
-mergedDf.to_csv(mergedPath)
+mergedDf.to_csv(mergedPath, index=False)
 print('CSVs are valid. Merged data saved to ' + mergedPath)
