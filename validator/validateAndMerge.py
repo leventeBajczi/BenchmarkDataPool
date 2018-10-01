@@ -30,13 +30,14 @@ path = os.path.join('benchmark_files', year, '*.csv')
 mergedPath = os.path.join('benchmark_files', year, 'MERGED.csv')
 dataFrames = []
 
-headers = ['kind', 'name', 'id', 'time', 'team']
+headers = ['kind', 'name', 'id', 'time', 'team', 'combination_id']
 types = {
     'kind': str,
     'name': str,
     'id': str,
     'time': numpy.float64,
-    'team': str
+    'team': str,
+    'combination_id': numpy.int32
 }
 
 for filename in glob2.glob(path):
