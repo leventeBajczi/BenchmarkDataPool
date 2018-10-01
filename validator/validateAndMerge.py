@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env conda-execute
 
 # conda execute
 # env:
@@ -6,6 +6,7 @@
 #  - pandas
 #  - numpy
 #  - glob2
+# run_with: python3
 
 import glob2
 import pandas
@@ -18,9 +19,9 @@ if len(sys.argv) < 2:
     exit(1)
 
 
-def validateDataFrameColumn(df, columnName, constraintRegex, filename):
-    if not all(df[columnName].str.contains(constraintRegex, case = True, regex = True)):
-        print(filename + ': column \'' + columnName + '\' is not valid!')
+def validate_column(data_frame, column_name, constraint_regex, file_name):
+    if not all(data_frame[column_name].str.contains(constraint_regex, case=True, regex=True)):
+        print(file_name + ': column \'' + column_name + '\' is not valid!')
         exit(2)
 
 
@@ -34,15 +35,15 @@ types = {
     'kind': str,
     'name': str,
     'id': str,
-    'time': numpy.int64,
+    'time': numpy.float64,
     'team': str
 }
 
 for filename in glob2.glob(path):
-    df = pandas.read_csv(filename, header = 0, names = headers, low_memory = False, dtype = types)
-    validateDataFrameColumn(df, 'kind', 'Start|End', filename)
-    validateDataFrameColumn(df, 'name', 'Tokenize|Collect|ComputeScalar|ComputeCosine', filename)
-    validateDataFrameColumn(df, 'id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', filename)
+    df = pandas.read_csv(filename, header=0, names=headers, low_memory=False, dtype=types)
+    validate_column(df, 'kind', '^(?:Start|End)$', filename)
+    validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)$', filename)
+    validate_column(df, 'id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', filename)
     dataFrames.append(df)
 
 if len(dataFrames) == 0:
