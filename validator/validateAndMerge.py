@@ -58,7 +58,7 @@ for file_path in filter(lambda fn: not fn.endswith('MERGED.csv'), glob2.glob(pat
     dataFrames.append(df)
 
 if len(dataFrames) == 0:
-    print('ERROR: No CSVs found in' + dir_to_validate)
+    print('ERROR: No CSVs found in directory ' + dir_to_validate)
     exit(4)
 
 mergedDf = pandas.concat(dataFrames)
