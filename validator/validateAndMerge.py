@@ -1,13 +1,3 @@
-#!/usr/bin/env conda-execute
-
-# conda execute
-# env:
-#  - python >=3
-#  - pandas
-#  - numpy
-#  - glob2
-# run_with: python3
-
 import glob2
 import pandas
 import numpy
@@ -21,15 +11,18 @@ if len(sys.argv) < 2:
 
 def validate_column(data_frame, column_name, constraint_regex, file_name):
     if not all(data_frame[column_name].str.contains(constraint_regex, case=True, regex=True)):
-        print('ERROR: ' + file_name + ': column \'' + column_name + '\' is not valid!')
+        print('ERROR in file "%s": column "%s" values don\'t match regex "%s"'
+              % (file_name, column_name, constraint_regex))
         exit(2)
 
 
 def check_for_duplicates(data_frame, file_name):
-    duplicate_bools = data_frame.duplicated(['kind', 'name', 'id', 'team', 'combination_id'])
-    number_of_duplicates = len(data_frame[duplicate_bools.values])
+    duplicate_bools = data_frame.duplicated()
+    duplicate_df = data_frame[duplicate_bools.values]
+    number_of_duplicates = len(duplicate_df)
     if number_of_duplicates > 0:
-        print('ERROR: ' + file_name + ': ' + str(number_of_duplicates) + ' duplicate items found')
+        print('ERROR in file "%s": data contains %s duplicated values' % (file_name, str(number_of_duplicates)))
+        print(duplicate_df)
         exit(3)
 
 
@@ -38,22 +31,22 @@ path_pattern = os.path.join(dir_to_validate, '*.csv')
 mergedPath = os.path.join(dir_to_validate, 'MERGED.csv')
 dataFrames = []
 
-headers = ['kind', 'name', 'id', 'time', 'team', 'combination_id']
+headers = ['type', 'name', 'input_id', 'time', 'team', 'meas_id']
 types = {
-    'kind': str,
+    'type': str,
     'name': str,
-    'id': str,
+    'input_id': str,
     'time': numpy.float64,
     'team': str,
-    'combination_id': numpy.int32
+    'meas_id': str
 }
 
 for file_path in filter(lambda fn: not fn.endswith('MERGED.csv'), glob2.glob(path_pattern)):
-    print('Processing ' + file_path + '...')
+    print('Processing file: %s' % file_path)
     df = pandas.read_csv(file_path, header=0, names=headers, low_memory=False, dtype=types)
-    validate_column(df, 'kind', '^(?:Start|End)$', file_path)
-    validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)$', file_path)
-    validate_column(df, 'id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
+    validate_column(df, 'type', '^(?:QUEUE|START|END)$', file_path)
+    validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)\d*$', file_path)
+    validate_column(df, 'input_id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
     check_for_duplicates(df, file_path)
     dataFrames.append(df)
 
