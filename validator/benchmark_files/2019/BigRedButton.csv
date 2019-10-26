@@ -1,4 +1,4 @@
-type,name,input_id,time, team, meas_id
+type,name,input_id,time,team,meas_id
 START,Tokenize1,Pride1,2721914106866,BigRedButton,Pride1_Sense1
 END,Tokenize1,Pride1,2721971613187,BigRedButton,Pride1_Sense1
 START,Collect1,Pride1,2721971712670,BigRedButton,Pride1_Sense1
