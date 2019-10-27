@@ -354,7 +354,6 @@ QUEUE,ComputeScalar3,Pride2_Sense6,15811907792500,NemVagyunkJokANevekben,Pride2_
 END,Tokenize2,Pride5_Sense5,15811905460700,NemVagyunkJokANevekben,Pride5_Sense5
 QUEUE,Tokenize2,Pride5_Sense5,15811911696300,NemVagyunkJokANevekben,Pride5_Sense5
 START,Tokenize2,Pride5_Sense6,15811911868500,NemVagyunkJokANevekben,Pride5_Sense6
-=====END=====
 END,Tokenize1,Pride5_Sense4,15811903468100,NemVagyunkJokANevekben,Pride5_Sense4
 QUEUE,Tokenize1,Pride5_Sense4,15811915954700,NemVagyunkJokANevekben,Pride5_Sense4
 START,Tokenize1,Pride5_Sense5,15811916583400,NemVagyunkJokANevekben,Pride5_Sense5
