@@ -47,6 +47,7 @@ for file_path in filter(lambda fn: not fn.endswith('MERGED.csv'), glob2.glob(pat
     validate_column(df, 'type', '^(?:QUEUE|START|END)$', file_path)
     validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)\d*$', file_path)
     validate_column(df, 'input_id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
+    validate_column(df, 'meas_id', '^(?:Pride)[1-6]_(?:Sense)[1-6]$', file_path)
     check_for_duplicates(df, file_path)
     dataFrames.append(df)
 
