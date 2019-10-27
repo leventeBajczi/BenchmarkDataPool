@@ -4,8 +4,10 @@ import numpy
 import sys
 import os.path
 
+from matplotlib import axis
+
 if len(sys.argv) < 2:
-    print('Specify the directory for validation, for example: ./validateAndMerge.py benchmark_files/2018')
+    print('Specify the directory for validation, for example: ./validateAndMerge.py benchmark_files/2019')
     exit(1)
 
 
@@ -13,7 +15,8 @@ def validate_column(data_frame, column_name, constraint_regex, file_name):
     if not all(data_frame[column_name].str.contains(constraint_regex, case=True, regex=True)):
         print('ERROR in file "%s": column "%s" values don\'t match regex "%s"'
               % (file_name, column_name, constraint_regex))
-        exit(2)
+        return False
+    return True
 
 
 def check_for_duplicates(data_frame, file_name):
@@ -23,7 +26,8 @@ def check_for_duplicates(data_frame, file_name):
     if number_of_duplicates > 0:
         print('ERROR in file "%s": data contains %s duplicated values' % (file_name, str(number_of_duplicates)))
         print(duplicate_df)
-        exit(3)
+        return False
+    return True
 
 
 dir_to_validate = sys.argv[1]
@@ -44,19 +48,21 @@ types = {
 for file_path in filter(lambda fn: not fn.endswith('MERGED.csv'), glob2.glob(path_pattern)):
     print('Processing file: %s' % file_path)
     df = pandas.read_csv(file_path, header=0, names=headers, low_memory=False, dtype=types)
-    validate_column(df, 'type', '^(?:QUEUE|START|END)$', file_path)
-    validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)\d*$', file_path)
-    validate_column(df, 'input_id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
-    validate_column(df, 'meas_id', '^(?:Pride)[1-6]_(?:Sense)[1-6]$', file_path)
-    check_for_duplicates(df, file_path)
-    dataFrames.append(df)
+    valid = True
+    valid &= validate_column(df, 'type', '^(?:QUEUE|START|END)$', file_path)
+    valid &= validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)\d*$', file_path)
+    valid &= validate_column(df, 'input_id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
+    valid &= validate_column(df, 'meas_id', '^(?:Pride)[1-6]_(?:Sense)[1-6]$', file_path)
+    valid &= check_for_duplicates(df, file_path)
+    if valid:
+        dataFrames.append(df)
 
 if len(dataFrames) == 0:
-    print('ERROR: No CSVs found in directory ' + dir_to_validate)
+    print('ERROR: No valid CSVs found in directory ' + dir_to_validate)
     exit(4)
 
 mergedDf = pandas.concat(dataFrames)
 check_for_duplicates(mergedDf, mergedPath)
 
 mergedDf.to_csv(mergedPath, index=False)
-print('CSVs are valid. Merged data saved to ' + mergedPath)
+print('Valid CSVs merged to ' + mergedPath)
