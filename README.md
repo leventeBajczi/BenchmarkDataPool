@@ -1,3 +1,3 @@
-# BenchmarkDataPool
+# Benchmark Data Pool
 
-This is going to be a collection of benchmark results.
+Collection of individual team benchmark results.
