@@ -69,6 +69,12 @@ if len(valid_data_frames) == 0:
     print('ERROR: No valid CSVs found in directory ' + dir_to_validate)
     exit(1)
 
+print('Merging CSVs...')
 merged_df = pandas.concat(valid_data_frames)
+
+if not check_for_duplicates(merged_df):
+    exit(1)
+
 merged_df.to_csv(merged_csv_path, index=False)
-print('Valid CSVs merged: ' + merged_csv_path)
+print('Valid CSVs saved: ' + merged_csv_path)
+exit(0)
