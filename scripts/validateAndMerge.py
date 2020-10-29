@@ -49,7 +49,7 @@ for file_path in filter(lambda fn: not fn.endswith('MERGED.csv'), glob2.glob(pat
     print('Processing file: %s' % file_path)
     df = pandas.read_csv(file_path, header=0, names=headers, low_memory=False, dtype=types)
     valid = True
-    valid &= validate_column(df, 'type', '^(?:QUEUE|START|END)$', file_path)
+    valid &= validate_column(df, 'type', '^(?:QUEUE|START|STOP)$', file_path)
     valid &= validate_column(df, 'name', '^(?:Tokenize|Collect|ComputeScalar|ComputeCosine)\d*$', file_path)
     valid &= validate_column(df, 'input_id', '^(?:Pride|Sense)[1-6](?:_(?:Pride|Sense)[1-6])?$', file_path)
     valid &= validate_column(df, 'meas_id', '^(?:Pride)[1-6]_(?:Sense)[1-6]$', file_path)
