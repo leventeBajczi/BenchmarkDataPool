@@ -49,6 +49,15 @@ def check_for_duplicates(data_frame):
     return True
 
 
+def check_for_missing_values(data_frame, col):
+    missing_value_indicators = data_frame[col].isna()
+    if missing_value_indicators.any():
+        print(f'ERROR: Missing values for "{col}" column in the following rows')
+        print(data_frame[missing_value_indicators])
+        return False
+    return True
+
+
 dir_to_validate = sys.argv[1] if len(sys.argv) == 2 else './csvs'
 path_pattern = os.path.join(dir_to_validate, '*.csv')
 merged_csv_path = os.path.join('./', 'MERGED.csv')
@@ -58,10 +67,12 @@ for file_path in glob2.glob(path_pattern):
     print('Processing file: %s' % file_path)
     df = pandas.read_csv(file_path, header=0, names=csv_header, low_memory=False, dtype=column_types)
     valid = True
+
     valid &= validate_column_range(df, 'type', type_col_values)
     valid &= validate_column_range(df, 'name', name_col_values)
     valid &= validate_column_range(df, 'input_id', input_id_col_values)
     valid &= validate_column_range(df, 'meas_id', meas_id_col_values)
+    valid &= check_for_missing_values(df[(df['type'] == 'START') | (df['type'] == 'STOP')], 'time')
     valid &= check_for_duplicates(df[unique_columns])
 
     if not valid:
