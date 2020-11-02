@@ -19,6 +19,7 @@ column_types = {
     'team': str,
     'meas_id': str
 }
+unique_columns = ['team', 'meas_id', 'name', 'input_id', 'type']
 type_col_values = ['QUEUE', 'START', 'STOP']
 name_col_values = [f'Tokenize{num}' for num in range(1, 3)] + [f'Collect{num}' for num in range(1, 3)] + \
                   [f'ComputeScalar{num}' for num in range(1, 4)] + ['ComputeCosine']
@@ -61,9 +62,13 @@ for file_path in glob2.glob(path_pattern):
     valid &= validate_column_range(df, 'name', name_col_values)
     valid &= validate_column_range(df, 'input_id', input_id_col_values)
     valid &= validate_column_range(df, 'meas_id', meas_id_col_values)
-    valid &= check_for_duplicates(df[['team', 'meas_id', 'name', 'input_id', 'type']])
-    if valid:
-        valid_data_frames.append(df)
+    valid &= check_for_duplicates(df[unique_columns])
+
+    if not valid:
+        print('ERROR: Invalid CSV: ' + file_path)
+        exit(1)
+
+    valid_data_frames.append(df)
 
 if len(valid_data_frames) == 0:
     print('ERROR: No valid CSVs found in directory ' + dir_to_validate)
@@ -72,7 +77,7 @@ if len(valid_data_frames) == 0:
 print('Merging CSVs...')
 merged_df = pandas.concat(valid_data_frames)
 
-if not check_for_duplicates(merged_df[['team', 'meas_id', 'name', 'input_id', 'type']]):
+if not check_for_duplicates(merged_df[unique_columns]):
     exit(1)
 
 print(merged_df.pivot_table(index=['team', 'meas_id', 'name', 'input_id'], columns='type', values='time').reset_index())
