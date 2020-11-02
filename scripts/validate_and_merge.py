@@ -61,7 +61,7 @@ for file_path in glob2.glob(path_pattern):
     valid &= validate_column_range(df, 'name', name_col_values)
     valid &= validate_column_range(df, 'input_id', input_id_col_values)
     valid &= validate_column_range(df, 'meas_id', meas_id_col_values)
-    valid &= check_for_duplicates(df)
+    valid &= check_for_duplicates(df[['team', 'meas_id', 'name', 'input_id', 'type']])
     if valid:
         valid_data_frames.append(df)
 
@@ -72,8 +72,10 @@ if len(valid_data_frames) == 0:
 print('Merging CSVs...')
 merged_df = pandas.concat(valid_data_frames)
 
-if not check_for_duplicates(merged_df):
+if not check_for_duplicates(merged_df[['team', 'meas_id', 'name', 'input_id', 'type']]):
     exit(1)
+
+print(merged_df.pivot_table(index=['team', 'meas_id', 'name', 'input_id'], columns='type', values='time').reset_index())
 
 merged_df.to_csv(merged_csv_path, index=False)
 print('Valid CSVs saved: ' + merged_csv_path)
