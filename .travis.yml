@@ -1,4 +1,0 @@
-language: python
-install: pip install glob2 pandas numpy
-script:
-- python ./scripts/validate_and_merge.py ./csvs
