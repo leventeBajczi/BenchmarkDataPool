@@ -67,7 +67,7 @@ def check_for_missing_values(data_frame, col):
 dir_to_validate = sys.argv[1] if len(sys.argv) == 2 else './csvs'
 path_pattern = os.path.join(dir_to_validate, '*.csv')
 merged_csv_path = os.path.join('./', 'MERGED.csv')
-processed_data_frames = []
+processed = 0
 
 for file_path in glob2.glob(path_pattern):
     print(f'Processing file "{file_path}"')
@@ -78,27 +78,16 @@ for file_path in glob2.glob(path_pattern):
     valid &= validate_column_range(df, 'name', name_col_values)
     valid &= validate_column_range(df, 'input_id', input_id_col_values)
     valid &= validate_column_range(df, 'meas_id', meas_id_col_values)
-    valid &= check_for_missing_values(df[(df['type'] == 'START') | (df['type'] == 'STOP')], 'time')
+    valid &= check_for_missing_values(df, 'time')
     valid &= check_for_duplicates(df[unique_columns])
 
     if not valid:
         print(f'ERROR: Invalid CSV: "{file_path}"')
         exit(1)
 
-    processed_data_frames.append(df)
+    processed += 1
 
-if len(processed_data_frames) == 0:
+if processed == 0:
     print(f'WARNING: No CSVs found in directory "{dir_to_validate}" for pattern "{path_pattern}"')
-    exit(0)
 
-print('Merging CSVs...')
-merged_df = pandas.concat(processed_data_frames)
-
-if not check_for_duplicates(merged_df[unique_columns]):
-    exit(1)
-
-print(merged_df.pivot_table(index=['team', 'meas_id', 'name', 'input_id'], columns='type', values='time').reset_index())
-
-merged_df.to_csv(merged_csv_path, index=False)
-print(f'Valid CSVs saved as "{merged_csv_path}"')
 exit(0)
