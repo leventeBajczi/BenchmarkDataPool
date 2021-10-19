@@ -23,14 +23,14 @@ jobs:
       - name: Execute merge script
         run: python ./scripts/merge.py ./csvs
           
-      - name: commit files
+      - name: Add and commit updated merged CSV
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add ./MERGED.csv
           git commit -m "Update merged CSV"
           
-      - name: push changes
+      - name: Push updated merged CSV to master branch
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
