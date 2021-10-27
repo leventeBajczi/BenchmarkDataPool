@@ -65,11 +65,18 @@ def check_for_missing_values(data_frame, col):
 
 
 dir_to_validate = sys.argv[1] if len(sys.argv) == 2 else './csvs'
-path_pattern = os.path.join(dir_to_validate, '*.csv')
+path_pattern = os.path.join(dir_to_validate, '*.*')
 merged_csv_path = os.path.join('./', 'MERGED.csv')
 processed = 0
 
 for file_path in glob2.glob(path_pattern):
+    if file_path.endswith('.gitkeep'):
+        continue
+    
+    if not file_path.endswith('.csv'):
+        print(f'ERROR: unsupported file extension: "{file_path}"')
+        exit(1)
+    
     print(f'Processing file "{file_path}"')
     df = pandas.read_csv(file_path, header=0, names=csv_header, low_memory=False, dtype=column_types)
     valid = True
